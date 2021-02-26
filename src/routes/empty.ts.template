@@ -1,0 +1,35 @@
+'use strict';
+
+import * as routing from '../lib/routing';
+import BBPromise = require('bluebird');
+
+// shortcut
+const HTTPError = routing.HTTPError;
+
+/**
+ * The main router object
+ */
+const router = routing.router();
+
+/**
+ * The main application object reported when this module is require()d
+ */
+let app;
+
+
+/** ROUTE DECLARATIONS GO HERE **/
+
+
+module.exports = function(appObj) {
+    app = appObj;
+
+    // the returned object mounts the routes on
+    // /{domain}/vX/mount/path
+    return {
+        path: '/mount/path',
+        api_version: X,  // must be a number!
+        router: router
+    };
+};
+
+export {};

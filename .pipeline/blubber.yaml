@@ -1,0 +1,49 @@
+version: v4
+base: docker-registry.wikimedia.org/buster-nodejs10-slim
+lives:
+  in: /srv/service
+runs:
+  environment: { APP_BASE_PATH: /srv/service }
+
+variants:
+  all-dependencies:
+    base: docker-registry.wikimedia.org/buster-nodejs10-devel
+    copies: [local]
+    apt: { packages: [git, build-essential, python-pkgconfig] }
+    node: { requirements: [package.json, package-lock.json] }
+    runs: { environment: { LINK: g++ } }
+  build:
+    includes: [all-dependencies]
+    builder:
+      command: [npm, run, build]
+      requirements: [package.json, tsconfig.json, .eslintignore, .eslintrc.json, src/]
+  development:
+    includes: [build]
+    apt: { packages: [ca-certificates] }
+    entrypoint: [node, dist/server.js]
+  npm-run:
+    includes: [build]
+    apt: { packages: [ca-certificates] }
+    entrypoint: [npm, run-script]
+  prep:
+    includes: [all-dependencies]
+    copies:
+      - from: build
+        source: /srv/service/dist
+        destination: /srv/service/dist
+    node: { env: production }
+  production:
+    base: docker-registry.wikimedia.org/buster-nodejs10-slim
+    node: { requirements: [] }
+    includes: [prep]
+    copies: [prep]
+    entrypoint: [node, dist/server.js]
+  codehealth:
+    base: docker-registry.wikimedia.org/releng/sonar-scanner:1.0.1
+    copies: [all-dependencies]
+    runs:
+      environment: { SONAR_API_KEY: "SONAR_API_KEY" }
+      insecurely: true
+    entrypoint:
+      - /bin/bash
+      - scripts/run_sonar.sh
