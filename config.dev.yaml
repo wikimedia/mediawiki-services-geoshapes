@@ -70,3 +70,13 @@ services:
         headers:
           user-agent: '{{user-agent}}'
         body: '{{ default(request.query, {}) }}'
+      postgres:
+        database: gis
+        host: localhost
+        password: 'secret'
+        user: 'default'
+      allowUserQueries: true
+      lineTable: planet_osm_line
+      polygonTable: planet_osm_polygon
+      table: planet_osm_polygon
+      wikidataQueryService: https://query.wikidata.org/bigdata/namespace/wdq/sparql
