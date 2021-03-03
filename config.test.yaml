@@ -75,6 +75,8 @@ services:
         host: localhost
         password: 'secret'
         user: 'default'
+        # tell the application to use a simple mocked DB
+        mock: true
       allowUserQueries: true
       lineTable: planet_osm_line
       polygonTable: planet_osm_polygon

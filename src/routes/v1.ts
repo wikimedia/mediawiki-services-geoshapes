@@ -50,10 +50,7 @@ router.get('/geoline', (req, res, next) => handler('geoline', req, res, next));
 
 module.exports = async (appObj) => {
     app = appObj;
-    // FIXME: handle DB interactions when testing (T276341)
-    if (!process.env.TESTING) {
-        await checkValidStructure();
-    }
+    await checkValidStructure();
     return {
         path: '/',
         skip_domain: true,

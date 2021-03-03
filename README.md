@@ -67,6 +67,9 @@ reporting the percentage of code covered. Start it with:
 npm run-script coverage
 ```
 
+The DB client should be mocked during tests. For that you should always pass
+`mock: true` as property in the postgres configuration, see `config.test.yaml`.
+
 ### Metrics
 
 The service uses prometheus (directly) for exposing metrics. Here are the operational
